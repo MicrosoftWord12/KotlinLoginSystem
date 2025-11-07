@@ -37,8 +37,8 @@ fun App() {
     val hardcodedPass = "password"
 
     val feetToMetresTitle = remember { mutableStateOf("Enter your feet-to-metres") }
-    val feetToMetres = remember { mutableStateOf("") }
 
+    val feetToMetres = remember { mutableStateOf("") }
     val feetToMetresConversion = remember { mutableStateOf(0.0)}
 
     DarkTheme {
@@ -46,11 +46,16 @@ fun App() {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-                    StyledInputField(value = username.value, onValueChange = { username.value = it }, textFieldTitle = usernameFieldText, textFieldPlaceholder = usernameFieldPlaceholder)
+                    StyledInputField(value = username.value, onValueChange = {
+                        username.value = it
+                        loginButtonTitle.value = "Login"
+
+                     }, textFieldTitle = usernameFieldText, textFieldPlaceholder = usernameFieldPlaceholder)
 
                     StyledInputField(value = password.value, onValueChange = {
                         password.value = it
                         loginButtonTitle.value = "Login"
+
                      }, textFieldTitle = passwordFieldText, textFieldPlaceholder = passwordFieldPlaceholder)
 
 
@@ -79,10 +84,14 @@ fun App() {
 
 
                     AnimatedVisibility(visible = hasLoggedIn.value) {
+
+
                         Column {
+                            Text(text = "Hello ${username.value}")
+
                             StyledInputField(feetToMetres.value, onValueChange = {
 
-                                feetToMetres.value = it.toDouble().toString()
+                                feetToMetres.value = (it.toDoubleOrNull() ?: (0.0)).toString()
                                 feetToMetresConversion.value = (feetToMetres.value.toDouble() * 0.305)
 
                             }, textFieldTitle = feetToMetresTitle.value, textFieldPlaceholder = "Feet to Metres")
