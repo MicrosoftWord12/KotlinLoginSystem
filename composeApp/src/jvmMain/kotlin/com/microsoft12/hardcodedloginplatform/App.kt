@@ -1,15 +1,10 @@
 package com.microsoft12.hardcodedloginplatform
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.microsoft12.hardcodedloginplatform.ui.components.StyledInputField
 import com.microsoft12.hardcodedloginplatform.ui.styles.DarkTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.math.roundToInt
 
 @Composable
 @Preview
@@ -35,8 +31,15 @@ fun App() {
 
     val loginButtonTitle = remember { mutableStateOf("Login") }
 
-    val hardcodedUsername = "username"
+    val hasLoggedIn = remember { mutableStateOf(false) }
+
+    val hardcodedUsername = "test"
     val hardcodedPass = "password"
+
+    val feetToMetresTitle = remember { mutableStateOf("Enter your feet-to-metres") }
+    val feetToMetres = remember { mutableStateOf("") }
+
+    val feetToMetresConversion = remember { mutableStateOf(0.0)}
 
     DarkTheme {
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -45,16 +48,32 @@ fun App() {
 
                     StyledInputField(value = username.value, onValueChange = { username.value = it }, textFieldTitle = usernameFieldText, textFieldPlaceholder = usernameFieldPlaceholder)
 
-                    StyledInputField(value = password.value, onValueChange = { password.value = it }, textFieldTitle = passwordFieldText, textFieldPlaceholder = passwordFieldPlaceholder)
+                    StyledInputField(value = password.value, onValueChange = {
+                        password.value = it
+                        loginButtonTitle.value = "Login"
+                     }, textFieldTitle = passwordFieldText, textFieldPlaceholder = passwordFieldPlaceholder)
 
                     Button(onClick = {
                         if(username.value == hardcodedUsername && password.value == hardcodedPass) {
                             loginButtonTitle.value = "Login Successful"
+                            hasLoggedIn.value = true
                         }else {
                             loginButtonTitle.value = "Login Failed: Invalid Credentials"
                         }
                     }, modifier = Modifier.absolutePadding(top = 20.dp)) {
                         Text(loginButtonTitle.value)
+                    }
+
+                    AnimatedVisibility(visible = hasLoggedIn.value) {
+                        Column {
+                            StyledInputField(feetToMetres.value, onValueChange = {
+
+                                feetToMetres.value = it.toDouble().toString()
+                                feetToMetresConversion.value = (feetToMetres.value.toDouble() * 0.305)
+
+                            }, textFieldTitle = feetToMetresTitle.value, textFieldPlaceholder = "Feet to Metres")
+                            Text(feetToMetresConversion.value.roundToInt().toString() + " Metres")
+                        }
                     }
                 }
             }
