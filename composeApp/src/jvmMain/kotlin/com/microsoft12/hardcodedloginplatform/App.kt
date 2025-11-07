@@ -53,16 +53,30 @@ fun App() {
                         loginButtonTitle.value = "Login"
                      }, textFieldTitle = passwordFieldText, textFieldPlaceholder = passwordFieldPlaceholder)
 
-                    Button(onClick = {
-                        if(username.value == hardcodedUsername && password.value == hardcodedPass) {
-                            loginButtonTitle.value = "Login Successful"
-                            hasLoggedIn.value = true
-                        }else {
-                            loginButtonTitle.value = "Login Failed: Invalid Credentials"
+
+                    if(hasLoggedIn.value) {
+                        Button(onClick = {
+                            hasLoggedIn.value = false
+                            loginButtonTitle.value = "Login"
+                            password.value = ""
+                            username.value = ""
+
+                        }, modifier = Modifier.absolutePadding(top = 20.dp)) {
+                            Text("Logout")
                         }
-                    }, modifier = Modifier.absolutePadding(top = 20.dp)) {
-                        Text(loginButtonTitle.value)
+                    }else{
+                        Button(onClick = {
+                            if(username.value == hardcodedUsername && password.value == hardcodedPass) {
+                                loginButtonTitle.value = "Login Successful"
+                                hasLoggedIn.value = true
+                            }else {
+                                loginButtonTitle.value = "Login Failed: Invalid Credentials"
+                            }
+                        }, modifier = Modifier.absolutePadding(top = 20.dp)) {
+                            Text(loginButtonTitle.value)
+                        }
                     }
+
 
                     AnimatedVisibility(visible = hasLoggedIn.value) {
                         Column {
